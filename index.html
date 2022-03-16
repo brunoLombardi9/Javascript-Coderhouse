@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="CSS/main.css">
+  <title>Javascript Coderhouse</title>
+</head>
+
+<body>
+<!-- NAVBAR ------------------------------------------------------------------------------>
+  <header>
+    <nav class="navbar navbar-light ">
+      <div class="container-fluid">
+        <a class="navbar-brand logoNav ms-5 text-light" href="index.html">Sneakers</a>
+        <form class="d-flex">
+          <input class="form-control me-2" type="search" placeholder="Busca..." aria-label="Search">
+          <button class="btn btn-light" type="submit">Buscar</button>
+        </form>
+      </div>
+    </nav>
+
+    <div class="navbar navbar-expand-lg navbar-light barraSecundariaNav">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0 navSecundaria">
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Zapatillas</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Categorias</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Marcas</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Ofertas</a>
+            </li>
+
+
+          </ul>
+
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- CIERRA HEADER --------------------------------------------------------------------->
+
+  <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-inner">
+      <div class="carousel-item active">
+        <img src="imagenes/NikesRojas.jpg" class="d-block w-100" alt="Nikes Rojas">
+      </div>
+      <div class="carousel-item">
+        <img src="imagenes/NikesRojas.jpg" class="d-block w-100" alt="Nikes Rojas">
+      </div>
+      <div class="carousel-item">
+        <img src="imagenes/NikesRojas.jpg" class="d-block w-100" alt="Nikes Rojas">
+      </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden"></span>
+    </button>
+  </div>
+
+
+
+
+  <script src="JS/script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+
+</html>
