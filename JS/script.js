@@ -3,6 +3,7 @@
 // VARIABLES ---------------------------------------------------------------------------
 
 const zapatillas = [];
+const contenedorProductos = document.querySelector('#contenedorProductos');
 
 // FUNCIONES ---------------------------------------------------------------------------
 
@@ -15,6 +16,50 @@ class calzado {
     this.id = (zapatillas.length);
   }
 }
+
+// function cardsProductos() {
+//
+//   const card = Object.assign(document.createElement('div'), {
+//     className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
+//   });
+//
+//   card.innerHTML = `<img src="" class="img-fluid mt-2" alt="imagenProducto"><h2 class="text-center">${zapatilla.modelo}</h2><h3 class="text-center">$${zapatilla.precio}</h3>`
+//
+//   const contenedorProductos = document.querySelector("#contenedorProductos");
+//
+//   contenedorProductos.appendChild(card);
+// }
+
+function resultadoBusquedaNike() {
+
+  const botonNike = document.querySelector('#nike');
+  botonNike.addEventListener('click', () => {
+
+    const resultado = zapatillas.filter((zapatilla) => {
+      return zapatilla.marca === "nike";
+    })
+    resultado.forEach((zapatilla) => {
+      const card = Object.assign(document.createElement('div'), {
+        className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
+      });
+
+      card.innerHTML = `<img src="" class="img-fluid mt-2" alt="imagenProducto"><h2 class="text-center">${zapatilla.modelo}</h2><h3 class="text-center">$${zapatilla.precio}</h3>`
+
+      const contenedorProductos = document.querySelector("#contenedorProductos");
+
+      contenedorProductos.appendChild(card);
+    })
+
+  })
+}
+
+
+function init() {
+  resultadoBusquedaNike();
+  // resultadoBusquedaAdidas();
+  // resultadoBusquedaReebok();
+}
+
 
 // OBJETOS --------------------------------------------------------------------------------
 

@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Pattaya&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Pattaya&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap');
 
 .logoNav {
-  font-family: 'Atkinson Hyperlegible', sans-serif;
   font-family: 'Pattaya', sans-serif;
   font-size: 3rem;
 }
@@ -22,4 +22,8 @@ nav{
 
 .navSecundaria .nav-item{
   margin-right: 1.2rem;
+}
+
+.nav-link{
+  font-family: 'Nunito', sans-serif;
 }

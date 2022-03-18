@@ -4,7 +4,8 @@
  * Copyright 2011-2021 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
-@import url("https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Pattaya&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Pattaya&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap");
 :root {
   --bs-blue: #0d6efd;
   --bs-indigo: #6610f2;
@@ -7811,7 +7812,6 @@ textarea.form-control-lg {
     display: none !important; } }
 
 .logoNav {
-  font-family: 'Atkinson Hyperlegible', sans-serif;
   font-family: 'Pattaya', sans-serif;
   font-size: 3rem; }
 
@@ -7828,3 +7828,9 @@ nav {
 
 .navSecundaria .nav-item {
   margin-right: 1.2rem; }
+
+.nav-link {
+  font-family: 'Nunito', sans-serif; }
+
+.barraLateral {
+  list-style: none; }
