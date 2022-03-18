@@ -30,14 +30,17 @@ class calzado {
 //   contenedorProductos.appendChild(card);
 // }
 
-function resultadoBusquedaNike() {
+function resultadoBusquedaMarcas() {
 
-  const botonNike = document.querySelector('#nike');
-  botonNike.addEventListener('click', () => {
+  document.querySelectorAll('.botonesMarcas').forEach(botonMarca =>{
+  botonMarca.addEventListener('click', () => {
 
     const resultado = zapatillas.filter((zapatilla) => {
-      return zapatilla.marca === "nike";
+      return zapatilla.marca === botonMarca.innerText;
     })
+
+contenedorProductos.innerHTML = '';
+
     resultado.forEach((zapatilla) => {
       const card = Object.assign(document.createElement('div'), {
         className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
@@ -51,43 +54,70 @@ function resultadoBusquedaNike() {
     })
 
   })
+  })
+}
+
+function resultadoBusquedaCategorias() {
+
+  document.querySelectorAll('.botonesCategorias').forEach(botonCategoria =>{
+  botonCategoria.addEventListener('click', () => {
+
+    const resultado = zapatillas.filter((zapatilla) => {
+      return zapatilla.categoria === botonCategoria.innerText;
+    })
+
+contenedorProductos.innerHTML = '';
+
+    resultado.forEach((zapatilla) => {
+      const card = Object.assign(document.createElement('div'), {
+        className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
+      });
+
+      card.innerHTML = `<img src="" class="img-fluid mt-2" alt="imagenProducto"><h2 class="text-center">${zapatilla.modelo}</h2><h3 class="text-center">$${zapatilla.precio}</h3>`
+
+      const contenedorProductos = document.querySelector("#contenedorProductos");
+
+      contenedorProductos.appendChild(card);
+    })
+
+  })
+  })
 }
 
 
 function init() {
-  resultadoBusquedaNike();
-  // resultadoBusquedaAdidas();
-  // resultadoBusquedaReebok();
+  resultadoBusquedaMarcas();
+resultadoBusquedaCategorias();
 }
 
 
 // OBJETOS --------------------------------------------------------------------------------
 
-// DECLARACION DE OBJETOS --------------------------------------------------------------------
 
-const cortez = new calzado("nike", "cortez", 15000, "moda");
+
+const cortez = new calzado("Nike", "cortez", 15000, "Moda");
 zapatillas.push(cortez);
 
-const alleyoop = new calzado("nike", "alleyoop", 18000, "skateboarding");
+const alleyoop = new calzado("Nike", "alleyoop", 18000, "Skateboarding");
 zapatillas.push(alleyoop);
 
-const blazer = new calzado("nike", "blazer", 14000, "skateboarding");
+const blazer = new calzado("Nike", "blazer", 14000, "Skateboarding");
 zapatillas.push(blazer);
 
-const runFalcon = new calzado("adidas", "run falcon", 12000, "running");
+const runFalcon = new calzado("Adidas", "run falcon", 12000, "Running");
 zapatillas.push(runFalcon);
 
-const forumLow = new calzado("adidas", "forum Low", 20000, "moda");
+const forumLow = new calzado("Adidas", "forum Low", 20000, "Moda");
 zapatillas.push(forumLow);
 
-const superStar = new calzado("adidas", "superstar", 18000, "skateboarding");
+const superStar = new calzado("Adidas", "superstar", 18000, "Skateboarding");
 zapatillas.push(superStar);
 
-const royal = new calzado("reebok", "royal", 10000, "moda");
+const royal = new calzado("Reebok", "royal", 10000, "Moda");
 zapatillas.push(royal);
 
-const club = new calzado("reebok", "club", 11000, "moda");
+const club = new calzado("Reebok", "club", 11000, "Moda");
 zapatillas.push(club);
 
-const legacy = new calzado("reebok", "legacy", 15000, "moda");
+const legacy = new calzado("Reebok", "legacy", 15000, "Moda");
 zapatillas.push(legacy);
