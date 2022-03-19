@@ -16,5 +16,13 @@
   },
   "dependencies": {
     "bootstrap": "^5.1.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brunoLombardi9/Javascript-Coderhouse.git"
+  },
+  "bugs": {
+    "url": "https://github.com/brunoLombardi9/Javascript-Coderhouse/issues"
+  },
+  "homepage": "https://github.com/brunoLombardi9/Javascript-Coderhouse#readme"
 }

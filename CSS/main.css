@@ -7818,6 +7818,13 @@ textarea.form-control-lg {
 nav {
   background-color: #062C30; }
 
+.botonCarrito {
+  width: 5rem;
+  border-radius: 100px; }
+
+svg {
+  color: white; }
+
 .barraSecundariaNav {
   background-color: #F5F5F5; }
 
@@ -7834,3 +7841,9 @@ nav {
 
 .barraLateral {
   list-style: none; }
+
+.botonesMarcas, .botonesCategorias {
+  cursor: pointer; }
+
+.botonesMarcas:hover, .botonesCategorias:hover {
+  transform: scale(1.1); }
