@@ -2,10 +2,10 @@
   list-style: none;
 }
 
-.botonesMarcas, .botonesCategorias{
+.botonesCategorias, .botonesMarcas{
   cursor: pointer;
 }
 
-.botonesMarcas:hover, .botonesCategorias:hover{
+.botonesCategorias:hover, .botonesMarcas:hover{
   transform: scale(1.1);
 }
