@@ -7822,6 +7822,10 @@ nav {
   width: 5rem;
   border-radius: 100px; }
 
+.colorFondoCarritoLLeno {
+  background-color: #B33030;
+  border-color: #B33030; }
+
 svg {
   color: white; }
 
@@ -7842,8 +7846,8 @@ svg {
 .barraLateral {
   list-style: none; }
 
-.botonesMarcas, .botonesCategorias {
+.botonesCategorias, .botonesMarcas {
   cursor: pointer; }
 
-.botonesMarcas:hover, .botonesCategorias:hover {
+.botonesCategorias:hover, .botonesMarcas:hover {
   transform: scale(1.1); }
