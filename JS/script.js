@@ -131,6 +131,7 @@ function eliminarProducto(id) {
 
   carrito.splice(objetoEliminado, 1);
 
+  almacenarDatos();
   carritoDeCompras();
   checkearCarrito();
 }
