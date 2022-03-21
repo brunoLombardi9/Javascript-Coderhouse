@@ -5,7 +5,9 @@
 const contenedorProductos = document.querySelector('#contenedorProductos');
 const actualizarTodas = document.querySelector('#actualizarTodas');
 const iconoCarrito = document.querySelector('.botonCarrito');
+const botonCarritoOriginal = iconoCarrito.innerHTML;
 const eliminarDelCarrito = document.querySelector('.eliminarDelCarrito');
+
 
 
 // ARRAYS ---------------------------------------------------------------------------
@@ -14,8 +16,6 @@ const zapatillas = [];
 let carrito = [];
 
 // FUNCIONES ---------------------------------------------------------------------------
-
-
 
 class calzado {
   constructor(marca, modelo, precio, categoria, imgOrigen) {
@@ -111,6 +111,7 @@ function todosLosModelos() {
 
     contenedorProductos.appendChild(card);
   })
+  checkearCarrito();
 }
 
 function agregarAlCarrito(id) {
@@ -119,31 +120,33 @@ function agregarAlCarrito(id) {
 
   carrito.push(objetoCarrito);
 
-checkearCarrito();
+  checkearCarrito();
 
-almacenarDatos();
+  almacenarDatos();
 }
 
-// function eliminarProducto(id) {
-//
-//   const objetoEliminado = zapatillas.find(zapatilla => zapatilla.id === id);
-//
-//   console.log(objetoEliminado);
-//
-// }
+function eliminarProducto(id) {
+
+  const objetoEliminado = zapatillas.find(zapatilla => zapatilla.id === id);
+
+  carrito.splice(objetoEliminado, 1);
+
+  carritoDeCompras();
+  checkearCarrito();
+}
 
 function carritoDeCompras() {
 
-if(carrito.length > 0){
+  if (carrito.length > 0) {
 
-  let precioFinal = 0;
+    let precioFinal = 0;
 
-  carrito.forEach(productoCarrito => {
-    precioFinal += productoCarrito.precio;
-    return precioFinal;
-  })
+    carrito.forEach(productoCarrito => {
+      precioFinal += productoCarrito.precio;
+      return precioFinal;
+    })
 
-  contenedorProductos.innerHTML = `
+    contenedorProductos.innerHTML = `
 
   <div id="contenedorCarrito" class="col-12 d-flex justify-content-center mt-5">
   <table class="table table-bordered">
@@ -152,13 +155,13 @@ if(carrito.length > 0){
     <tr>
       <th scope="col"></th>
       <th scope="col"></th>
-      <th scope="col d-flex justify-content-center"><button id="vaciarCarrito" class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button></th>
+      <th scope="col" class ="d-flex justify-content-center"><button id="vaciarCarrito" class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button></th>
     </tr>
 
       <tr>
         <th scope="col">Producto</th>
         <th scope="col">Precio</th>
-        <th scope="col">Total</th>
+        <th scope="col" class = "text-center">Total</th>
       </tr>
     </thead>
     <tbody >
@@ -173,60 +176,69 @@ if(carrito.length > 0){
   </table>
 </div>`;
 
-  const elementosCarrito = document.querySelector('#elementosCarrito');
+    const elementosCarrito = document.querySelector('#elementosCarrito');
 
-  carrito.forEach(productoCarrito => {
+    carrito.forEach(productoCarrito => {
 
-    const datosProducto = document.createElement("tr");
+      const datosProducto = document.createElement("tr");
 
-    datosProducto.innerHTML = `
+      datosProducto.innerHTML = `
     <th scope="row">${productoCarrito.marca} ${productoCarrito.modelo}</th>
         <td>$${productoCarrito.precio}</td>
         <td class ="d-flex justify-content-center"><button class="btn btn-danger eliminarDelCarrito" onclick="eliminarProducto(${productoCarrito.id})">X</button></td>
 `
-    elementosCarrito.appendChild(datosProducto)
+      elementosCarrito.appendChild(datosProducto)
 
-  })
-}else{
+    })
+  } else {
 
-contenedorProductos.innerHTML = `<p class="h1 text-center mt-5">El carrito está vacío</p>`
+    contenedorProductos.innerHTML = `<p class="h1 text-center mt-5">El carrito está vacío</p>`
 
+  }
 }
-}
 
-function almacenarDatos(){
+function almacenarDatos() {
 
   localStorage.setItem("Usuario", JSON.stringify(carrito));
 
 }
 
-function precargarDatos(){
-  carrito = JSON.parse(localStorage.getItem("Usuario"));
+function precargarDatos() {
+
+  if (JSON.parse(localStorage.getItem("Usuario")) !== null) {
+    carrito = JSON.parse(localStorage.getItem("Usuario"));
+  }
 }
 
-function checkearCarrito(){
+function checkearCarrito() {
 
   if (carrito.length > 0) {
     iconoCarrito.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
           <path
             d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-        </svg>  ${carrito.length}`
-    iconoCarrito.classList.add("colorFondoCarritoLLeno")
+        </svg>  ${carrito.length}`;
+    iconoCarrito.classList.add("colorFondoCarritoLLeno");
+  } else {
+    iconoCarrito.innerHTML = botonCarritoOriginal;
+    iconoCarrito.classList.remove("colorFondoCarritoLLeno");
   }
 }
 
-function vaciarCarrito(){
-carrito = [];
-almacenarDatos();
+function vaciarCarrito() {
+  carrito = [];
+  carritoDeCompras();
+  checkearCarrito()
+  almacenarDatos();
 }
 
 function init() {
-  checkearCarrito();
-  precargarDatos()
+  precargarDatos();
   todosLosModelos();
   resultadoBusquedaCategorias();
   resultadoBusquedaMarcas();
 }
+
+
 // OBJETOS --------------------------------------------------------------------------------
 
 const cortez = new calzado("Nike", "Cortez", 15000, "Moda", "imagenes/nike cortez.png");
