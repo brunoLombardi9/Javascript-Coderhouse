@@ -129,7 +129,7 @@ function eliminarProducto(id) {
 
   const objetoEliminado = zapatillas.find(zapatilla => zapatilla.id === id);
 
-  carrito.splice(objetoEliminado, 1);
+  carrito.splice(carrito.indexOf(objetoEliminado), 1);
 
   almacenarDatos();
   carritoDeCompras();
