@@ -7,7 +7,8 @@ const actualizarTodas = document.querySelector('#actualizarTodas');
 const iconoCarrito = document.querySelector('.botonCarrito');
 const botonCarritoOriginal = iconoCarrito.innerHTML;
 const eliminarDelCarrito = document.querySelector('.eliminarDelCarrito');
-
+const botonesMarcas = document.querySelectorAll('.botonesMarcas');
+const botonesCategorias = document.querySelectorAll('.botonesCategorias');
 
 
 // ARRAYS ---------------------------------------------------------------------------
@@ -31,86 +32,52 @@ class calzado {
   }
 }
 
-function resultadoBusquedaMarcas() {
+function generarCards(parametroCard) {
+  parametroCard.forEach((zapatilla) => {
+    const card = Object.assign(document.createElement('div'), {
+      className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
+    });
 
-  document.querySelectorAll('.botonesMarcas').forEach(botonMarca => {
-    botonMarca.addEventListener('click', () => {
+    card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
+    <h2 class="text-center">${zapatilla.modelo}</h2>
+    <h3 class="text-center">$${zapatilla.precio}</h3>
+    <button class="btn btn-primary" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`
 
-      const resultado = zapatillas.filter((zapatilla) => {
-        return zapatilla.marca === botonMarca.innerText;
-      })
+    const contenedorProductos = document.querySelector("#contenedorProductos");
 
-      contenedorProductos.innerHTML = '';
-
-      if (resultado.length == 0) {
-
-        contenedorProductos.innerHTML = `<p class="h1 text-center mt-5">Lo sentimos, no encontramos lo que buscabas</p>`;
-
-      } else {
-
-        resultado.forEach((zapatilla) => {
-          const card = Object.assign(document.createElement('div'), {
-            className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
-          });
-
-          card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto"><h2 class="text-center">${zapatilla.modelo}</h2><h3 class="text-center">$${zapatilla.precio}</h3><button class="btn btn-primary" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`
-
-          const contenedorProductos = document.querySelector("#contenedorProductos");
-
-          contenedorProductos.appendChild(card);
-        })
-      }
-    })
-  })
+    contenedorProductos.appendChild(card);
+  });
 }
 
-function resultadoBusquedaCategorias() {
+function resultadoBusqueda(botonera, parametroBusqueda) {
 
-  document.querySelectorAll('.botonesCategorias').forEach(botonCategoria => {
-    botonCategoria.addEventListener('click', () => {
+  botonera.forEach(boton => {
+    boton.addEventListener('click', () => {
 
       const resultado = zapatillas.filter((zapatilla) => {
-        return zapatilla.categoria === botonCategoria.innerText;
-      })
-
+        return zapatilla[parametroBusqueda] === boton.innerText;
+      });
 
       contenedorProductos.innerHTML = '';
 
-      if (resultado.length == 0) {
+      if (resultado.length === 0) {
 
-        contenedorProductos.innerHTML = `<p class="h1 text-center mt-5">Lo sentimos, no encontramos lo que buscabas</p>`;
+        contenedorProductos.innerHTML = `
+        <p class="h1 text-center mt-5">Lo sentimos, no encontramos lo que buscabas</p>`;
 
       } else {
-
-        resultado.forEach((zapatilla) => {
-          const card = Object.assign(document.createElement('div'), {
-            className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
-          });
-          card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto"><h2 class="text-center">${zapatilla.modelo}</h2><h3 class="text-center">$${zapatilla.precio}</h3><button class="btn btn-primary" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`;
-          const contenedorProductos = document.querySelector("#contenedorProductos");
-
-          contenedorProductos.appendChild(card);
-        })
+        generarCards(resultado);
       }
-    })
-  })
+    });
+  });
 }
 
 function todosLosModelos() {
 
   contenedorProductos.innerHTML = "";
 
-  zapatillas.forEach(zapatilla => {
-    const card = Object.assign(document.createElement('div'), {
-      className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
-    });
+  generarCards(zapatillas);
 
-    card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto"><h2 class="text-center">${zapatilla.modelo}</h2><h3 class="text-center">$${zapatilla.precio}</h3><button class="btn btn-primary" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`;
-
-    const contenedorProductos = document.querySelector("#contenedorProductos");
-
-    contenedorProductos.appendChild(card);
-  })
   checkearCarrito();
 }
 
@@ -187,14 +154,11 @@ function carritoDeCompras() {
     <th scope="row">${productoCarrito.marca} ${productoCarrito.modelo}</th>
         <td>$${productoCarrito.precio}</td>
         <td class ="d-flex justify-content-center"><button class="btn btn-danger eliminarDelCarrito" onclick="eliminarProducto(${productoCarrito.id})">X</button></td>
-`
+                                `
       elementosCarrito.appendChild(datosProducto)
-
     })
   } else {
-
-    contenedorProductos.innerHTML = `<p class="h1 text-center mt-5">El carrito está vacío</p>`
-
+    contenedorProductos.innerHTML = `<p class="h1 text-center mt-5">El carrito está vacío</p>`;
   }
 }
 
@@ -235,8 +199,8 @@ function vaciarCarrito() {
 function init() {
   precargarDatos();
   todosLosModelos();
-  resultadoBusquedaCategorias();
-  resultadoBusquedaMarcas();
+  resultadoBusqueda(botonesMarcas, "marca");
+  resultadoBusqueda(botonesCategorias, "categoria");
 }
 
 
