@@ -19,7 +19,7 @@ let carrito = [];
 // FUNCIONES ---------------------------------------------------------------------------
 
 class calzado {
-  constructor(marca, modelo, precio, categoria, imgOrigen) {
+  constructor(marca, modelo, precio, categoria, imgOrigen, porcentajeDescuento) {
     this.marca = marca;
     this.modelo = modelo;
     this.precio = precio;
@@ -28,7 +28,13 @@ class calzado {
     const imagen = new Image();
     imagen.src = imgOrigen;
     this.img = imagen;
+    this.porcentajeDescuento = porcentajeDescuento;
 
+    this.porcentajeDescuento !== undefined && porcentajeDescuento > 0 && porcentajeDescuento < 80 ?
+      this.nuevoPrecio = ((100 - porcentajeDescuento) / 100) * this.precio :
+      this.nuevoPrecio = undefined;
+
+    this.nuevoPrecio !== undefined ? this.precioDefinitivo = this.nuevoPrecio : this.precioDefinitivo = this.precio;
   }
 }
 
@@ -38,12 +44,19 @@ function generarCards(parametroCard) {
       className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
     });
 
-    card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
-    <h2 class="text-center">${zapatilla.modelo}</h2>
-    <h3 class="text-center">$${zapatilla.precio}</h3>
-    <button class="btn btn-primary" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`
+    if (zapatilla.nuevoPrecio !== undefined) {
+      card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
+    <h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
+      <h3 class="text-center"><del>$${zapatilla.precio}</del></h3>
+      <h3 class="text-center text-danger">$${zapatilla.nuevoPrecio} ${zapatilla.porcentajeDescuento}% OFF</h3>
+      <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`
 
-    const contenedorProductos = document.querySelector("#contenedorProductos");
+    } else {
+      card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
+<h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
+<h3 class="text-center">$${zapatilla.precio}</h3>
+<button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`
+    }
 
     contenedorProductos.appendChild(card);
   });
@@ -81,6 +94,16 @@ function todosLosModelos() {
   checkearCarrito();
 }
 
+function mostrarOfertas() {
+
+  const resultado = zapatillas.filter(zapatilla => {
+    return zapatilla.porcentajeDescuento !== undefined;
+  });
+  contenedorProductos.innerHTML = '';
+
+  generarCards(resultado);
+}
+
 function agregarAlCarrito(id) {
 
   const objetoCarrito = zapatillas.find(zapatilla => zapatilla.id === id);
@@ -110,7 +133,7 @@ function carritoDeCompras() {
     let precioFinal = 0;
 
     carrito.forEach(productoCarrito => {
-      precioFinal += productoCarrito.precio;
+      precioFinal += productoCarrito.precioDefinitivo;
       return precioFinal;
     })
 
@@ -152,7 +175,7 @@ function carritoDeCompras() {
 
       datosProducto.innerHTML = `
     <th scope="row">${productoCarrito.marca} ${productoCarrito.modelo}</th>
-        <td>$${productoCarrito.precio}</td>
+        <td>$${productoCarrito.precioDefinitivo}</td>
         <td class ="d-flex justify-content-center"><button class="btn btn-danger eliminarDelCarrito" onclick="eliminarProducto(${productoCarrito.id})">X</button></td>
                                 `
       elementosCarrito.appendChild(datosProducto)
@@ -208,17 +231,17 @@ function init() {
 
 const cortez = new calzado("Nike", "Cortez", 15000, "Moda", "imagenes/nike cortez.png");
 zapatillas.push(cortez);
-const alleyoop = new calzado("Nike", "Alleyoop", 18000, "Skateboarding", "imagenes/nike aleyoop.jpg");
+const alleyoop = new calzado("Nike", "Alleyoop", 18000, "Skateboarding", "imagenes/nike aleyoop.jpg", 10);
 zapatillas.push(alleyoop);
-const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp");
+const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp", );
 zapatillas.push(blazer);
-const runFalcon = new calzado("Adidas", "Run falcon", 12000, "Running", "imagenes/adidas run falcon.webp");
+const runFalcon = new calzado("Adidas", "Run Falcon", 12000, "Running", "imagenes/adidas run falcon.webp", 20);
 zapatillas.push(runFalcon);
 const forumLow = new calzado("Adidas", "Forum Low", 20000, "Moda", "imagenes/adidas forum low.webp");
 zapatillas.push(forumLow);
-const superStar = new calzado("Adidas", "Superstar", 18000, "Skateboarding", "imagenes/adidas superstar.webp");
+const superStar = new calzado("Adidas", "Superstar", 18000, "Skateboarding", "imagenes/adidas superstar.webp", );
 zapatillas.push(superStar);
-const royal = new calzado("Reebok", "Royal", 10000, "Moda", "imagenes/reebok royal.webp");
+const royal = new calzado("Reebok", "Royal", 10000, "Moda", "imagenes/reebok royal.webp", 25);
 zapatillas.push(royal);
 const club = new calzado("Reebok", "Club", 11000, "Moda", "imagenes/reebok club.webp");
 zapatillas.push(club);
