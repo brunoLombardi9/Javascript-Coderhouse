@@ -18,47 +18,53 @@ let carrito = [];
 
 // FUNCIONES ---------------------------------------------------------------------------
 
-class calzado {
-  constructor(marca, modelo, precio, categoria, imgOrigen, porcentajeDescuento) {
-    this.marca = marca;
-    this.modelo = modelo;
-    this.precio = precio;
-    this.categoria = categoria
-    this.id = zapatillas.length;
-    const imagen = new Image();
-    imagen.src = imgOrigen;
-    this.img = imagen;
-    this.porcentajeDescuento = porcentajeDescuento;
+function init() {
+  precargarDatos();
+  todosLosModelos();
+  resultadoBusqueda(botonesMarcas, "marca");
+  resultadoBusqueda(botonesCategorias, "categoria");
+}
 
-    this.porcentajeDescuento !== undefined && porcentajeDescuento > 0 && porcentajeDescuento < 80 ?
-      this.nuevoPrecio = ((100 - porcentajeDescuento) / 100) * this.precio :
-      this.nuevoPrecio = undefined;
+function almacenarDatos() {
+  localStorage.setItem("Usuario", JSON.stringify(carrito));
+}
 
-    this.nuevoPrecio !== undefined ? this.precioDefinitivo = this.nuevoPrecio : this.precioDefinitivo = this.precio;
-  }
+function precargarDatos() {
+
+  JSON.parse(localStorage.getItem("Usuario")) !== null ?
+    carrito = JSON.parse(localStorage.getItem("Usuario")) :
+    almacenarDatos();
+}
+
+function limpiarProductos() {
+  contenedorProductos.innerHTML = '';
 }
 
 function generarCards(parametroCard) {
+
   parametroCard.forEach((zapatilla) => {
-    const card = Object.assign(document.createElement('div'), {
-      className: 'col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3'
-    });
 
     if (zapatilla.nuevoPrecio !== undefined) {
-      card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
-    <h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
+      contenedorProductos.innerHTML += `
+      <div class="col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3">
+      <img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
+      <h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
       <h3 class="text-center"><del>$${zapatilla.precio}</del></h3>
       <h3 class="text-center text-danger">$${zapatilla.nuevoPrecio} ${zapatilla.porcentajeDescuento}% OFF</h3>
-      <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`
+      <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>
+      </div>
+      `;
 
     } else {
-      card.innerHTML = `<img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
-<h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
-<h3 class="text-center">$${zapatilla.precio}</h3>
-<button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>`
+      contenedorProductos.innerHTML += `
+      <div class="col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3">
+      <img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
+      <h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
+      <h3 class="text-center">$${zapatilla.precio}</h3>
+      <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>
+      </div>
+      `;
     }
-
-    contenedorProductos.appendChild(card);
   });
 }
 
@@ -71,26 +77,18 @@ function resultadoBusqueda(botonera, parametroBusqueda) {
         return zapatilla[parametroBusqueda] === boton.innerText;
       });
 
-      contenedorProductos.innerHTML = '';
+      limpiarProductos();
 
-      if (resultado.length === 0) {
-
-        contenedorProductos.innerHTML = `
-        <p class="h1 text-center mt-5">Lo sentimos, no encontramos lo que buscabas</p>`;
-
-      } else {
-        generarCards(resultado);
-      }
+      (resultado.length > 0) ?
+        generarCards(resultado):
+        contenedorProductos.innerHTML = ` <p class="h1 text-center mt-5">Lo sentimos, no encontramos lo que buscabas</p>`;
     });
   });
 }
 
 function todosLosModelos() {
-
-  contenedorProductos.innerHTML = "";
-
+  limpiarProductos();
   generarCards(zapatillas);
-
   checkearCarrito();
 }
 
@@ -99,8 +97,8 @@ function mostrarOfertas() {
   const resultado = zapatillas.filter(zapatilla => {
     return zapatilla.porcentajeDescuento !== undefined;
   });
-  contenedorProductos.innerHTML = '';
 
+  limpiarProductos();
   generarCards(resultado);
 }
 
@@ -109,6 +107,18 @@ function agregarAlCarrito(id) {
   const objetoCarrito = zapatillas.find(zapatilla => zapatilla.id === id);
 
   carrito.push(objetoCarrito);
+
+  Toastify({
+    text: `¡Agregaste ${objetoCarrito.marca} ${objetoCarrito.modelo} al carrito!`,
+    duration: 1200,
+    newWindow: true,
+    gravity: "bottom", // `top` or `bottom`
+    position: "right", // `left`, `center` or `right`
+    stopOnFocus: false, // Prevents dismissing of toast on hover
+    style: {
+      background: "#062C30",
+    },
+  }).showToast();
 
   checkearCarrito();
 
@@ -174,37 +184,24 @@ function carritoDeCompras() {
       const datosProducto = document.createElement("tr");
 
       datosProducto.innerHTML = `
-    <th scope="row">${productoCarrito.marca} ${productoCarrito.modelo}</th>
+        <th scope="row">${productoCarrito.marca} ${productoCarrito.modelo}</th>
         <td>$${productoCarrito.precioDefinitivo}</td>
         <td class ="d-flex justify-content-center"><button class="btn btn-danger eliminarDelCarrito" onclick="eliminarProducto(${productoCarrito.id})">X</button></td>
                                 `
       elementosCarrito.appendChild(datosProducto)
-    })
+    });
   } else {
     contenedorProductos.innerHTML = `<p class="h1 text-center mt-5">El carrito está vacío</p>`;
-  }
-}
-
-function almacenarDatos() {
-
-  localStorage.setItem("Usuario", JSON.stringify(carrito));
-
-}
-
-function precargarDatos() {
-
-  if (JSON.parse(localStorage.getItem("Usuario")) !== null) {
-    carrito = JSON.parse(localStorage.getItem("Usuario"));
   }
 }
 
 function checkearCarrito() {
 
   if (carrito.length > 0) {
-    iconoCarrito.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-          <path
-            d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
-        </svg>  ${carrito.length}`;
+    iconoCarrito.innerHTML = `
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
+          <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z" />
+         </svg>  ${carrito.length}`;
     iconoCarrito.classList.add("colorFondoCarritoLLeno");
   } else {
     iconoCarrito.innerHTML = botonCarritoOriginal;
@@ -219,15 +216,30 @@ function vaciarCarrito() {
   almacenarDatos();
 }
 
-function init() {
-  precargarDatos();
-  todosLosModelos();
-  resultadoBusqueda(botonesMarcas, "marca");
-  resultadoBusqueda(botonesCategorias, "categoria");
+
+// METODO CONSTUCTOR Y OBJETOS --------------------------------------------------------------------------------
+
+class calzado {
+  constructor(marca, modelo, precio, categoria, imgOrigen, porcentajeDescuento) {
+    this.marca = marca;
+    this.modelo = modelo;
+    this.precio = precio;
+    this.categoria = categoria
+    this.id = zapatillas.length;
+    const imagen = new Image();
+    imagen.src = imgOrigen;
+    this.img = imagen;
+    this.porcentajeDescuento = porcentajeDescuento;
+
+    this.porcentajeDescuento !== undefined && porcentajeDescuento > 0 && porcentajeDescuento < 50 ?
+      this.nuevoPrecio = ((100 - porcentajeDescuento) / 100) * this.precio :
+      this.nuevoPrecio = undefined;
+
+    this.nuevoPrecio !== undefined ?
+      this.precioDefinitivo = this.nuevoPrecio :
+      this.precioDefinitivo = this.precio;
+  }
 }
-
-
-// OBJETOS --------------------------------------------------------------------------------
 
 const cortez = new calzado("Nike", "Cortez", 15000, "Moda", "imagenes/nike cortez.png");
 zapatillas.push(cortez);
