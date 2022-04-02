@@ -14,13 +14,14 @@ const botonesCategorias = document.querySelectorAll('.botonesCategorias');
 // ARRAYS ---------------------------------------------------------------------------
 
 const zapatillas = [];
+let zapatillasImportadas = [];
 let carrito = [];
 
 // FUNCIONES ---------------------------------------------------------------------------
 
 function init() {
   precargarDatos();
-  todosLosModelos();
+  cargarTodosLosModelos();   //Añade los modelos que provienen de la API
   resultadoBusqueda(botonesMarcas, "marca");
   resultadoBusqueda(botonesCategorias, "categoria");
 }
@@ -68,6 +69,29 @@ function generarCards(parametroCard) {
   });
 }
 
+function cargarTodosLosModelos() {
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Host': 'the-sneaker-database.p.rapidapi.com',
+      'X-RapidAPI-Key': 'f533083bc4msh51410bda77b71a6p125cecjsnce463cda1a98'
+    }
+  };
+
+  fetch('https://the-sneaker-database.p.rapidapi.com/sneakers?limit=10', options)
+    .then(response => response.json())
+    .then(response => {
+      //Se adaptan las propiedades de los objetos obtenidos de la API a la estructura que tenian los objetos originales del proyecto
+      zapatillasImportadas = response.results;
+      zapatillasImportadas.forEach(zapatillaImportada => {
+        const zapatillaDatosAdaptados = new calzado(`${zapatillaImportada.brand}`, `${zapatillaImportada.silhouette}`, 30000, "Importadas", `${zapatillaImportada.image.original}`)
+        zapatillas.push(zapatillaDatosAdaptados);
+      });
+    })
+    .then(() => todosLosModelos())
+    .catch(todosLosModelos());
+}
+
 function resultadoBusqueda(botonera, parametroBusqueda) {
 
   botonera.forEach(boton => {
@@ -80,7 +104,7 @@ function resultadoBusqueda(botonera, parametroBusqueda) {
       limpiarProductos();
 
       (resultado.length > 0) ?
-        generarCards(resultado):
+      generarCards(resultado):
         contenedorProductos.innerHTML = ` <p class="h1 text-center mt-5">Lo sentimos, no encontramos lo que buscabas</p>`;
     });
   });
@@ -232,10 +256,10 @@ class calzado {
     this.porcentajeDescuento = porcentajeDescuento;
 
     this.porcentajeDescuento !== undefined && porcentajeDescuento > 0 && porcentajeDescuento < 50 ?
-      this.nuevoPrecio = ((100 - porcentajeDescuento) / 100) * this.precio :
+      this.nuevoPrecio = ((100 - porcentajeDescuento) / 100) * this.precio : //Calcula nuevo precio basado en el porcentaje de descuento
       this.nuevoPrecio = undefined;
 
-    this.nuevoPrecio !== undefined ?
+    this.nuevoPrecio !== undefined ? //Si no tiene descuento que asigne precio original como precio definitivo
       this.precioDefinitivo = this.nuevoPrecio :
       this.precioDefinitivo = this.precio;
   }
