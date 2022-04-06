@@ -9,19 +9,20 @@ const botonCarritoOriginal = iconoCarrito.innerHTML;
 const eliminarDelCarrito = document.querySelector('.eliminarDelCarrito');
 const botonesMarcas = document.querySelectorAll('.botonesMarcas');
 const botonesCategorias = document.querySelectorAll('.botonesCategorias');
-
+let cotizacionDolar;
 
 // ARRAYS ---------------------------------------------------------------------------
 
 const zapatillas = [];
-let zapatillasImportadas = [];
+let zapatillasBasket = [];
 let carrito = [];
 
 // FUNCIONES ---------------------------------------------------------------------------
 
 function init() {
   precargarDatos();
-  cargarTodosLosModelos();   //Añade los modelos que provienen de la API
+  cargarCotizacionDolar();
+  cargarTodosLosModelos(); //Añade los modelos que provienen de la API
   resultadoBusqueda(botonesMarcas, "marca");
   resultadoBusqueda(botonesCategorias, "categoria");
 }
@@ -50,7 +51,7 @@ function generarCards(parametroCard) {
       <div class="col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3">
       <img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
       <h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
-      <h3 class="text-center"><del>$${zapatilla.precio}</del></h3>
+      <h3 class="text-center text-decoration-line-through">$${zapatilla.precio}</h3>
       <h3 class="text-center text-danger">$${zapatilla.nuevoPrecio} ${zapatilla.porcentajeDescuento}% OFF</h3>
       <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>
       </div>
@@ -78,13 +79,18 @@ function cargarTodosLosModelos() {
     }
   };
 
-  fetch('https://the-sneaker-database.p.rapidapi.com/sneakers?limit=10', options)
+  fetch('https://the-sneaker-database.p.rapidapi.com/sneakers?limit=100', options)
     .then(response => response.json())
     .then(response => {
       //Se adaptan las propiedades de los objetos obtenidos de la API a la estructura que tenian los objetos originales del proyecto
-      zapatillasImportadas = response.results;
-      zapatillasImportadas.forEach(zapatillaImportada => {
-        const zapatillaDatosAdaptados = new calzado(`${zapatillaImportada.brand}`, `${zapatillaImportada.silhouette}`, 30000, "Importadas", `${zapatillaImportada.image.original}`)
+      zapatillasBasket = response.results.filter(zapatillaBasket => {
+      return  zapatillaBasket.brand === "Jordan" && zapatillaBasket.retailPrice > 0 && zapatillaBasket.image.original !== "" ;
+      });
+      zapatillasBasket.forEach(zapatillaBasket => {
+
+        const precioEnPesos = parseInt(zapatillaBasket.retailPrice) * cotizacionDolar;
+
+        const zapatillaDatosAdaptados = new calzado(`${zapatillaBasket.brand}`, `${zapatillaBasket.name}`, precioEnPesos, "Basket", `${zapatillaBasket.image.original}`)
         zapatillas.push(zapatillaDatosAdaptados);
       });
     })
@@ -233,11 +239,19 @@ function checkearCarrito() {
   }
 }
 
-function vaciarCarrito() {
+function vaciarCarrito(valorCotizacion) {
   carrito = [];
   carritoDeCompras();
   checkearCarrito()
   almacenarDatos();
+}
+
+function cargarCotizacionDolar() {
+  fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales')
+    .then(response => response.json())
+    .then(response => {
+      cotizacionDolar = parseInt(response[1].casa.venta); //Se pasa valor actual del dolar extraido de la API
+    })
 }
 
 
