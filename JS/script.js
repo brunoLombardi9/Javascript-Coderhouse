@@ -22,7 +22,7 @@ let carrito = [];
 function init() {
   precargarDatos();
   cargarCotizacionDolar();
-  cargarTodosLosModelos(); //Añade los modelos que provienen de la API
+  cargarTodosLosModelos(); //Añade los modelos que provienen de la API al array zapatillas y reenderiza las cards
   resultadoBusqueda(botonesMarcas, "marca");
   resultadoBusqueda(botonesCategorias, "categoria");
 }
@@ -48,21 +48,21 @@ function generarCards(parametroCard) {
 
     if (zapatilla.nuevoPrecio !== undefined) {
       contenedorProductos.innerHTML += `
-      <div class="col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3">
+      <div class="col-lg-3 col-sm-4 bg-light card m-3 pb-3">
       <img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
       <h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
       <h3 class="text-center text-decoration-line-through">$${zapatilla.precio}</h3>
-      <h3 class="text-center text-danger">$${zapatilla.nuevoPrecio} ${zapatilla.porcentajeDescuento}% OFF</h3>
+      <h3 class="text-center text-danger mt-auto">$${zapatilla.nuevoPrecio} ${zapatilla.porcentajeDescuento}% OFF</h3>
       <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>
       </div>
       `;
 
     } else {
       contenedorProductos.innerHTML += `
-      <div class="col-lg-3 col-sm-6 bg-light card mt-3 mb-3 pb-3">
+      <div class="col-lg-3 col-sm-4 bg-light card m-3 pb-3">
       <img src= ${zapatilla.img.src} class="img-fluid mt-2" alt="imagenProducto">
       <h2 class="text-center">${zapatilla.marca} ${zapatilla.modelo}</h2>
-      <h3 class="text-center">$${zapatilla.precio}</h3>
+      <h3 class="text-center mt-auto">$${zapatilla.precio}</h3>
       <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${zapatilla.id})'>Agregar al carrito</button>
       </div>
       `;
@@ -84,12 +84,11 @@ function cargarTodosLosModelos() {
     .then(response => {
       //Se adaptan las propiedades de los objetos obtenidos de la API a la estructura que tenian los objetos originales del proyecto
       zapatillasBasket = response.results.filter(zapatillaBasket => {
-      return  zapatillaBasket.brand === "Jordan" && zapatillaBasket.retailPrice > 0 && zapatillaBasket.image.original !== "" ;
+        return zapatillaBasket.brand === "Jordan" && zapatillaBasket.retailPrice > 0 && zapatillaBasket.image.original !== "";
       });
+
       zapatillasBasket.forEach(zapatillaBasket => {
-
         const precioEnPesos = parseInt(zapatillaBasket.retailPrice) * cotizacionDolar;
-
         const zapatillaDatosAdaptados = new calzado(`${zapatillaBasket.brand}`, `${zapatillaBasket.name}`, precioEnPesos, "Basket", `${zapatillaBasket.image.original}`)
         zapatillas.push(zapatillaDatosAdaptados);
       });
@@ -179,7 +178,7 @@ function carritoDeCompras() {
 
     contenedorProductos.innerHTML = `
 
-  <div id="contenedorCarrito" class="col-12 d-flex justify-content-center mt-5">
+  <div id="contenedorCarrito" class="justify-content-center mt-5">
   <table class="table table-bordered">
     <thead id="elementosCarrito">
 
@@ -239,7 +238,7 @@ function checkearCarrito() {
   }
 }
 
-function vaciarCarrito(valorCotizacion) {
+function vaciarCarrito() {
   carrito = [];
   carritoDeCompras();
   checkearCarrito()
@@ -251,7 +250,7 @@ function cargarCotizacionDolar() {
     .then(response => response.json())
     .then(response => {
       cotizacionDolar = parseInt(response[1].casa.venta); //Se pasa valor actual del dolar extraido de la API
-    })
+    }).catch(cotizacionDolar = 210);
 }
 
 
@@ -283,13 +282,13 @@ const cortez = new calzado("Nike", "Cortez", 15000, "Moda", "imagenes/nike corte
 zapatillas.push(cortez);
 const alleyoop = new calzado("Nike", "Alleyoop", 18000, "Skateboarding", "imagenes/nike aleyoop.jpg", 10);
 zapatillas.push(alleyoop);
-const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp", );
+const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp");
 zapatillas.push(blazer);
 const runFalcon = new calzado("Adidas", "Run Falcon", 12000, "Running", "imagenes/adidas run falcon.webp", 20);
 zapatillas.push(runFalcon);
 const forumLow = new calzado("Adidas", "Forum Low", 20000, "Moda", "imagenes/adidas forum low.webp");
 zapatillas.push(forumLow);
-const superStar = new calzado("Adidas", "Superstar", 18000, "Skateboarding", "imagenes/adidas superstar.webp", );
+const superStar = new calzado("Adidas", "Superstar", 18000, "Skateboarding", "imagenes/adidas superstar.webp");
 zapatillas.push(superStar);
 const royal = new calzado("Reebok", "Royal", 10000, "Moda", "imagenes/reebok royal.webp", 25);
 zapatillas.push(royal);
