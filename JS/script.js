@@ -10,12 +10,17 @@ const eliminarDelCarrito = document.querySelector('.eliminarDelCarrito');
 const botonesMarcas = document.querySelectorAll('.botonesMarcas');
 const botonesCategorias = document.querySelectorAll('.botonesCategorias');
 let cotizacionDolar;
+let resultadosPorPagina = 6;
+let paginaActual = 1;
+let numeroDePaginas;
 
 // ARRAYS ---------------------------------------------------------------------------
 
-const zapatillas = [];
-let zapatillasBasket = [];
-let carrito = [];
+let zapatillas = []; // array principal
+let arrayPaginacion = []; //array que muestra la pagina actual
+let totalDeResultados = []; //contiene todos los datos obtenidos en la busqueda
+let zapatillasBasket = []; // contiene los modelos obtenidos a traves de la API
+let carrito = []; // carrito de compras
 
 // FUNCIONES ---------------------------------------------------------------------------
 
@@ -42,9 +47,9 @@ function limpiarProductos() {
   contenedorProductos.innerHTML = '';
 }
 
-function generarCards(parametroCard) {
+function generarCards(arrayARenderizar) {
 
-  parametroCard.forEach((zapatilla) => {
+  arrayARenderizar.forEach((zapatilla) => {
 
     if (zapatilla.nuevoPrecio !== undefined) {
       contenedorProductos.innerHTML += `
@@ -68,6 +73,31 @@ function generarCards(parametroCard) {
       `;
     }
   });
+
+  if (paginaActual > 1 && paginaActual < numeroDePaginas) {
+    contenedorProductos.innerHTML += `
+      <p class="text-center">Página ${paginaActual}</p>
+      <div class="d-flex justify-content-evenly">
+      <button class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
+      <button class= "btn btn-primary mb-3" onclick="avanzar()">Siguiente</button>
+      </div>`;
+  } else if (paginaActual === numeroDePaginas && numeroDePaginas > 1) {
+    contenedorProductos.innerHTML += `
+  <p class="text-center">Ultima pagina</p>
+  <p class="text-center">Página ${paginaActual}</p>
+  <div class="d-flex justify-content-center">
+  <button id="botonAnterior" class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
+  </div>`;
+  } else if (paginaActual === numeroDePaginas && numeroDePaginas === 1) {
+    contenedorProductos.innerHTML += `<p class= "text-center">Solo una pagina</p>`
+  } else if (paginaActual === 1 && paginaActual < numeroDePaginas) {
+    contenedorProductos.innerHTML += `
+  <p class="text-center">Página ${paginaActual}</p>
+  <div class="d-flex justify-content-center">
+  <button id="botonAnterior" class= "btn btn-primary mb-3 text-center" onclick="avanzar()">Siguiente</button>
+  </div>`;
+  }
+
 }
 
 function cargarTodosLosModelos() {
@@ -75,7 +105,7 @@ function cargarTodosLosModelos() {
     method: 'GET',
     headers: {
       'X-RapidAPI-Host': 'the-sneaker-database.p.rapidapi.com',
-      'X-RapidAPI-Key': 'f533083bc4msh51410bda77b71a6p125cecjsnce463cda1a98'
+      // 'X-RapidAPI-Key': 'f533083bc4msh51410bda77b71a6p125cecjsnce463cda1a98'
     }
   };
 
@@ -106,10 +136,12 @@ function resultadoBusqueda(botonera, parametroBusqueda) {
         return zapatilla[parametroBusqueda] === boton.innerText;
       });
 
+      const resultadoBusquedaZapatilla = datosPaginacion(resultado)
+
       limpiarProductos();
 
-      (resultado.length > 0) ?
-      generarCards(resultado):
+      (totalDeResultados.length > 0) ?
+      generarCards(resultadoBusquedaZapatilla):
         contenedorProductos.innerHTML = ` <p class="h1 text-center mt-5">Lo sentimos, no encontramos lo que buscabas</p>`;
     });
   });
@@ -117,7 +149,8 @@ function resultadoBusqueda(botonera, parametroBusqueda) {
 
 function todosLosModelos() {
   limpiarProductos();
-  generarCards(zapatillas);
+  const catalogoCompleto = datosPaginacion(zapatillas);
+  generarCards(catalogoCompleto);
   checkearCarrito();
 }
 
@@ -127,8 +160,10 @@ function mostrarOfertas() {
     return zapatilla.porcentajeDescuento !== undefined;
   });
 
+  const ofertas = datosPaginacion(resultado);
+
   limpiarProductos();
-  generarCards(resultado);
+  generarCards(ofertas);
 }
 
 function agregarAlCarrito(id) {
@@ -177,17 +212,14 @@ function carritoDeCompras() {
     })
 
     contenedorProductos.innerHTML = `
-
   <div id="contenedorCarrito" class="justify-content-center mt-5">
   <table class="table table-bordered">
     <thead id="elementosCarrito">
-
     <tr>
       <th scope="col"></th>
       <th scope="col"></th>
       <th scope="col" class ="d-flex justify-content-center"><button id="vaciarCarrito" class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button></th>
     </tr>
-
       <tr>
         <th scope="col">Producto</th>
         <th scope="col">Precio</th>
@@ -195,13 +227,11 @@ function carritoDeCompras() {
       </tr>
     </thead>
     <tbody >
-
       <tr>
         <th scope="row"></th>
         <td></td>
         <td class="h4 text-center">$${precioFinal}</td>
       </tr>
-
     </tbody>
   </table>
 </div>`;
@@ -253,6 +283,51 @@ function cargarCotizacionDolar() {
     }).catch(cotizacionDolar = 210);
 }
 
+function indicePaginacion(arrayBuscado, pagina = paginaActual) {
+  numeroDePaginas = pagina;
+  const inicio = (pagina - 1) * resultadosPorPagina;
+  const final = pagina * resultadosPorPagina;
+  return arrayBuscado.slice(inicio, final)
+}
+
+function datosPaginacion(arrayAMostrar) {
+
+  totalDeResultados = arrayAMostrar;
+
+  paginaActual = 1;
+
+  let resultadosPaginasArray = indicePaginacion(arrayAMostrar, 1);
+
+  arrayPaginacion = [];
+
+  arrayPaginacion.push(resultadosPaginasArray);
+
+  numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
+
+  console.log(totalDeResultados);
+  console.log(arrayPaginacion);
+  console.log(numeroDePaginas);
+
+  return resultadosPaginasArray;
+
+}
+
+function avanzar() {
+  paginaActual++;
+  arrayPaginacion = indicePaginacion(totalDeResultados, paginaActual);
+  limpiarProductos();
+  numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
+  generarCards(arrayPaginacion);
+}
+
+function retroceder() {
+  paginaActual--;
+  arrayPaginacion = indicePaginacion(totalDeResultados, paginaActual);
+  limpiarProductos();
+  numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
+  generarCards(arrayPaginacion);
+}
+
 
 // METODO CONSTUCTOR Y OBJETOS --------------------------------------------------------------------------------
 
@@ -282,7 +357,7 @@ const cortez = new calzado("Nike", "Cortez", 15000, "Moda", "imagenes/nike corte
 zapatillas.push(cortez);
 const alleyoop = new calzado("Nike", "Alleyoop", 18000, "Skateboarding", "imagenes/nike aleyoop.jpg", 10);
 zapatillas.push(alleyoop);
-const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp");
+const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp",5);
 zapatillas.push(blazer);
 const runFalcon = new calzado("Adidas", "Run Falcon", 12000, "Running", "imagenes/adidas run falcon.webp", 20);
 zapatillas.push(runFalcon);
@@ -292,7 +367,21 @@ const superStar = new calzado("Adidas", "Superstar", 18000, "Skateboarding", "im
 zapatillas.push(superStar);
 const royal = new calzado("Reebok", "Royal", 10000, "Moda", "imagenes/reebok royal.webp", 25);
 zapatillas.push(royal);
-const club = new calzado("Reebok", "Club", 11000, "Moda", "imagenes/reebok club.webp");
+const club = new calzado("Reebok", "Club", 11000, "Moda", "imagenes/reebok club.webp", );
 zapatillas.push(club);
 const legacy = new calzado("Reebok", "Legacy", 15000, "Moda", "imagenes/reebok legacy.webp");
 zapatillas.push(legacy);
+
+
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
+zapatillas.push(blazer);
