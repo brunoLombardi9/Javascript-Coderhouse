@@ -47,10 +47,40 @@ function limpiarProductos() {
   contenedorProductos.innerHTML = '';
 }
 
+function evaluarResultados() {
+  if (paginaActual > 1 && paginaActual < numeroDePaginas) {
+    contenedorProductos.innerHTML += `
+      <div id="contenedorAmbosBotones" class="d-flex justify-content-evenly mt-4">
+      <button class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
+        <p class="text-center">Página ${paginaActual}</p>
+      <button class= "btn btn-primary mb-3" onclick="avanzar()">Siguiente</button>
+      </div>`;
+  } else if (paginaActual === numeroDePaginas && numeroDePaginas > 1) {
+    contenedorProductos.innerHTML += `
+  <p class="text-center mt-3">Página ${paginaActual} (Última pagina)</p>
+  <div class="d-flex justify-content-center">
+  <button id="botonAnterior" class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
+  </div>`;
+  } else if (paginaActual === numeroDePaginas && numeroDePaginas === 1) {
+    contenedorProductos.innerHTML += `<p class= "text-center mt-3">Solo una pagina</p>`;
+  } else if (paginaActual === 1 && paginaActual < numeroDePaginas) {
+    contenedorProductos.innerHTML += `
+  <p class="text-center mt-3">Página ${paginaActual}</p>
+  <div class="d-flex justify-content-center">
+  <button id="botonAnterior" class= "btn btn-primary mb-3 text-center" onclick="avanzar()">Siguiente</button>
+  </div>`;
+  }
+}
+
 function generarCards(arrayARenderizar) {
+
+  if (totalDeResultados.length > resultadosPorPagina) {
+    evaluarResultados();
+  }
 
   arrayARenderizar.forEach((zapatilla) => {
 
+    //Evalua si el producto tiene descuento----------------------------------------------------
     if (zapatilla.nuevoPrecio !== undefined) {
       contenedorProductos.innerHTML += `
       <div class="col-lg-3 col-sm-4 bg-light card m-3 pb-3">
@@ -73,31 +103,7 @@ function generarCards(arrayARenderizar) {
       `;
     }
   });
-
-  if (paginaActual > 1 && paginaActual < numeroDePaginas) {
-    contenedorProductos.innerHTML += `
-      <p class="text-center">Página ${paginaActual}</p>
-      <div class="d-flex justify-content-evenly">
-      <button class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
-      <button class= "btn btn-primary mb-3" onclick="avanzar()">Siguiente</button>
-      </div>`;
-  } else if (paginaActual === numeroDePaginas && numeroDePaginas > 1) {
-    contenedorProductos.innerHTML += `
-  <p class="text-center">Ultima pagina</p>
-  <p class="text-center">Página ${paginaActual}</p>
-  <div class="d-flex justify-content-center">
-  <button id="botonAnterior" class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
-  </div>`;
-  } else if (paginaActual === numeroDePaginas && numeroDePaginas === 1) {
-    contenedorProductos.innerHTML += `<p class= "text-center">Solo una pagina</p>`
-  } else if (paginaActual === 1 && paginaActual < numeroDePaginas) {
-    contenedorProductos.innerHTML += `
-  <p class="text-center">Página ${paginaActual}</p>
-  <div class="d-flex justify-content-center">
-  <button id="botonAnterior" class= "btn btn-primary mb-3 text-center" onclick="avanzar()">Siguiente</button>
-  </div>`;
-  }
-
+  evaluarResultados();
 }
 
 function cargarTodosLosModelos() {
@@ -105,7 +111,7 @@ function cargarTodosLosModelos() {
     method: 'GET',
     headers: {
       'X-RapidAPI-Host': 'the-sneaker-database.p.rapidapi.com',
-      // 'X-RapidAPI-Key': 'f533083bc4msh51410bda77b71a6p125cecjsnce463cda1a98'
+      // 'X-RapidAPI-Key': '3d7ed3c552msh2ea4e4901b56bb2p155f0fjsnca753ccf0a18'
     }
   };
 
@@ -296,17 +302,13 @@ function datosPaginacion(arrayAMostrar) {
 
   paginaActual = 1;
 
-  let resultadosPaginasArray = indicePaginacion(arrayAMostrar, 1);
+  let resultadosPaginasArray = indicePaginacion(arrayAMostrar);
 
   arrayPaginacion = [];
 
   arrayPaginacion.push(resultadosPaginasArray);
 
   numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
-
-  console.log(totalDeResultados);
-  console.log(arrayPaginacion);
-  console.log(numeroDePaginas);
 
   return resultadosPaginasArray;
 
@@ -318,6 +320,7 @@ function avanzar() {
   limpiarProductos();
   numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
   generarCards(arrayPaginacion);
+  volverArriba();
 }
 
 function retroceder() {
@@ -326,6 +329,15 @@ function retroceder() {
   limpiarProductos();
   numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
   generarCards(arrayPaginacion);
+  volverArriba();
+}
+
+function volverArriba() {
+  const techo = document.documentElement;
+  techo.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
 }
 
 
@@ -357,7 +369,7 @@ const cortez = new calzado("Nike", "Cortez", 15000, "Moda", "imagenes/nike corte
 zapatillas.push(cortez);
 const alleyoop = new calzado("Nike", "Alleyoop", 18000, "Skateboarding", "imagenes/nike aleyoop.jpg", 10);
 zapatillas.push(alleyoop);
-const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp",5);
+const blazer = new calzado("Nike", "Blazer", 14000, "Skateboarding", "imagenes/nike blazer.webp");
 zapatillas.push(blazer);
 const runFalcon = new calzado("Adidas", "Run Falcon", 12000, "Running", "imagenes/adidas run falcon.webp", 20);
 zapatillas.push(runFalcon);
@@ -367,7 +379,7 @@ const superStar = new calzado("Adidas", "Superstar", 18000, "Skateboarding", "im
 zapatillas.push(superStar);
 const royal = new calzado("Reebok", "Royal", 10000, "Moda", "imagenes/reebok royal.webp", 25);
 zapatillas.push(royal);
-const club = new calzado("Reebok", "Club", 11000, "Moda", "imagenes/reebok club.webp", );
+const club = new calzado("Reebok", "Club", 11000, "Moda", "imagenes/reebok club.webp");
 zapatillas.push(club);
 const legacy = new calzado("Reebok", "Legacy", 15000, "Moda", "imagenes/reebok legacy.webp");
 zapatillas.push(legacy);
@@ -381,7 +393,13 @@ zapatillas.push(blazer);
 zapatillas.push(blazer);
 zapatillas.push(blazer);
 zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
+
+zapatillas.push(royal);
+zapatillas.push(royal);
+zapatillas.push(royal);
+zapatillas.push(royal);
+zapatillas.push(royal);
+zapatillas.push(royal);
+zapatillas.push(royal);
+zapatillas.push(royal);
+zapatillas.push(royal);
