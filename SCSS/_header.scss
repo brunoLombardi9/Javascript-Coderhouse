@@ -23,7 +23,7 @@ svg{
 }
 
 .barraSecundariaNav{
-  background-color: #F5F5F5;
+  background-color: $colorBarras;
 }
 
 .navSecundaria{
@@ -32,7 +32,7 @@ svg{
   font-size: 1.5rem;
 }
 
-.navSecundaria .nav-item{
+.nav-item{
   margin-right: 1.2rem;
 }
 

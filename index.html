@@ -41,8 +41,73 @@
           </ul>
 
         </div>
+
+
       </div>
     </div>
+
+    <div id="sideBarMobile" class="sidebar-nav">
+
+      <nav class="navbar navbar-light bg-light">
+
+        <div class="container-fluid">
+
+          <!-- Mobile Menu Toggle Button -->
+
+          <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+
+            <span class="navbar-toggler-icon"></span>
+
+          </button>
+
+
+
+          <!-- Menus List -->
+
+          <div class="bg-light offcanvas offcanvas-start shadow" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+
+            <div class="offcanvas-body">
+
+              <ul class="navbar-nav">
+
+
+                <li class="nav-item"><a href="#" onclick="todosLosModelos()"><span class="item-text">Zapatillas</span></a></li>
+                <li class="nav-item"><a href="#" onclick="mostrarOfertas()"><span class="item-text">Ofertas</span></a></li>
+
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                  <p class="h4">Categorías</p>
+                </li>
+                <li class="botonesCategorias"><a href="#"><span class="item-text">Running</span></a></li>
+                <li class="botonesCategorias"><a href="#"><span class="item-text">Skateboarding</span></a></li>
+                <li class="botonesCategorias"><a href="#"><span>Futbol</span></a></li>
+                <li class="botonesCategorias"><a href="#"><span>Basket</span></a></li>
+                <li class="botonesCategorias"><a href="#"><span>Moda</span></a></li>
+
+                <li>
+                  <hr class="dropdown-divider">
+                </li>
+
+                <li>
+                  <p class="h4">Marcas</p>
+                </li>
+
+                <li class="botonesMarcas"><a href="#"><span class="item-text">Nike</span></a></li>
+                <li class="botonesMarcas"><a href="#"><span class="item-text">Adidas</span></a></li>
+                <li class="botonesMarcas"><a href="#"><span class="item-text">Reebok</span></a></li>
+                <li class="botonesMarcas"><a href="#"><span class="item-text">Jordan</span></a></li>
+
+
+              </ul>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
   </header>
   <!-- CIERRA HEADER --------------------------------------------------------------------->
 
@@ -65,18 +130,20 @@
           <li>
             <p class="h2">Marcas</p>
           </li>
+
           <li class="botonesMarcas">Nike</li>
           <li class="botonesMarcas">Adidas</li>
           <li class="botonesMarcas">Reebok</li>
           <li class="botonesMarcas">Jordan</li>
         </ul>
-
       </div>
 
 
+
       <div class="col-sm-12 col-md-10 d-flex justify-content-center">
-      <div id=sideBarMobile></div>
-        <div id="contenedorProductos" class="row d-flex justify-content-center w-100"></div>
+        <div id="contenedorProductos" class="row d-flex justify-content-center w-100">
+
+        </div>
       </div>
 
     </div>

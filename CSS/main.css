@@ -7837,7 +7837,7 @@ svg {
   margin-left: auto;
   font-size: 1.5rem; }
 
-.navSecundaria .nav-item {
+.nav-item {
   margin-right: 1.2rem; }
 
 .nav-link {
@@ -7852,9 +7852,48 @@ svg {
 .botonesCategorias:hover, .botonesMarcas:hover {
   transform: scale(1.1); }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 991px) {
   .esconderBarraDsiplayPequenio {
     display: none; } }
+
+#sideBarMobile {
+  background-color: #F5F5F5; }
+
+@media only screen and (min-width: 992px) {
+  #sideBarMobile {
+    display: none; } }
+
+@media only screen and (max-width: 991px) {
+  .barraSecundariaNav {
+    display: none; } }
+
+.sidebar-nav ul li a {
+  font-size: 1rem;
+  text-decoration: none;
+  display: block;
+  padding: 6px 10px;
+  transition: 0.5s; }
+
+.sidebar-nav ul li a:hover {
+  background-color: #eeeeee;
+  border-radius: 4px; }
+
+.sidebar-nav .offcanvas {
+  width: 220px;
+  border: none; }
+
+.sidebar-nav .offcanvas ul li a span {
+  font-size: 18px;
+  position: relative;
+  top: -4px;
+  transition: 0.5s; }
+
+.sidebar-nav .offcanvas.show ul li a:hover span {
+  padding-left: 10px; }
+
+.sidebar-nav .dropdown-toggle::after {
+  position: relative;
+  top: 3px; }
 
 .toastify {
   padding: 12px 20px;
