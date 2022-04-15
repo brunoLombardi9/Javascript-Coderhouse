@@ -51,15 +51,15 @@ function evaluarResultados() {
   if (paginaActual > 1 && paginaActual < numeroDePaginas) {
     contenedorProductos.innerHTML += `
       <div id="contenedorAmbosBotones" class="d-flex justify-content-evenly mt-4">
-      <button class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
+      <button class= "btn btn-primary mb-3" onclick= avanzarRetroceder("retroceder")>Anterior</button>
         <p class="text-center">Página ${paginaActual}</p>
-      <button class= "btn btn-primary mb-3" onclick="avanzar()">Siguiente</button>
+      <button class= "btn btn-primary mb-3" onclick= avanzarRetroceder("avanzar")>Siguiente</button>
       </div>`;
   } else if (paginaActual === numeroDePaginas && numeroDePaginas > 1) {
     contenedorProductos.innerHTML += `
   <p class="text-center mt-3">Página ${paginaActual} (Última pagina)</p>
   <div class="d-flex justify-content-center">
-  <button id="botonAnterior" class= "btn btn-primary mb-3" onclick="retroceder()">Anterior</button>
+  <button class= "btn btn-primary mb-3" onclick= avanzarRetroceder("retroceder")>Anterior</button>
   </div>`;
   } else if (paginaActual === numeroDePaginas && numeroDePaginas === 1) {
     contenedorProductos.innerHTML += `<p class= "text-center mt-3">Solo una pagina</p>`;
@@ -67,7 +67,7 @@ function evaluarResultados() {
     contenedorProductos.innerHTML += `
   <p class="text-center mt-3">Página ${paginaActual}</p>
   <div class="d-flex justify-content-center">
-  <button id="botonAnterior" class= "btn btn-primary mb-3 text-center" onclick="avanzar()">Siguiente</button>
+  <button class= "btn btn-primary mb-3 text-center" onclick= avanzarRetroceder("avanzar")>Siguiente</button>
   </div>`;
   }
 }
@@ -111,7 +111,7 @@ function cargarTodosLosModelos() {
     method: 'GET',
     headers: {
       'X-RapidAPI-Host': 'the-sneaker-database.p.rapidapi.com',
-      // 'X-RapidAPI-Key': '3d7ed3c552msh2ea4e4901b56bb2p155f0fjsnca753ccf0a18'
+      'X-RapidAPI-Key': '3d7ed3c552msh2ea4e4901b56bb2p155f0fjsnca753ccf0a18'
     }
   };
 
@@ -176,23 +176,40 @@ function agregarAlCarrito(id) {
 
   const objetoCarrito = zapatillas.find(zapatilla => zapatilla.id === id);
 
-  carrito.push(objetoCarrito);
+  const cantidadDeProductos = carrito.filter(objetoCarrito => objetoCarrito.id === id);
 
-  Toastify({
-    text: `¡Agregaste ${objetoCarrito.marca} ${objetoCarrito.modelo} al carrito!`,
-    duration: 1200,
-    newWindow: true,
-    gravity: "bottom", // `top` or `bottom`
-    position: "right", // `left`, `center` or `right`
-    stopOnFocus: false, // Prevents dismissing of toast on hover
-    style: {
-      background: "#062C30",
-    },
-  }).showToast();
+  if (cantidadDeProductos.length < 5) {
+    carrito.push(objetoCarrito);
 
-  checkearCarrito();
+    Toastify({
+      text: `¡Agregaste ${objetoCarrito.marca} ${objetoCarrito.modelo} al carrito!`,
+      duration: 1200,
+      newWindow: true,
+      gravity: "bottom", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
+      stopOnFocus: false, // Prevents dismissing of toast on hover
+      style: {
+        background: "#062C30",
+      },
+    }).showToast();
 
-  almacenarDatos();
+    checkearCarrito();
+
+    almacenarDatos();
+  } else {
+    Toastify({
+      text: `¡Agregaste la catidad máxima!`,
+      duration: 1200,
+      newWindow: true,
+      gravity: "bottom", // `top` or `bottom`
+      position: "right", // `left`, `center` or `right`
+      stopOnFocus: false, // Prevents dismissing of toast on hover
+      style: {
+        background: "#D82148",
+      },
+    }).showToast();
+  }
+
 }
 
 function eliminarProducto(id) {
@@ -235,7 +252,7 @@ function carritoDeCompras() {
     <tbody >
       <tr>
         <th scope="row"></th>
-        <td></td>
+        <td><div class="d-flex justify-content-center"><button class="btn btn-success">Comprar</button></div></td>
         <td class="h4 text-center">$${precioFinal}</td>
       </tr>
     </tbody>
@@ -314,17 +331,14 @@ function datosPaginacion(arrayAMostrar) {
 
 }
 
-function avanzar() {
-  paginaActual++;
-  arrayPaginacion = indicePaginacion(totalDeResultados, paginaActual);
-  limpiarProductos();
-  numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
-  generarCards(arrayPaginacion);
-  volverArriba();
-}
+function avanzarRetroceder(accion) {
 
-function retroceder() {
-  paginaActual--;
+  if (accion === "avanzar") {
+    paginaActual++;
+  } else if (accion === "retroceder") {
+    paginaActual--;
+  }
+
   arrayPaginacion = indicePaginacion(totalDeResultados, paginaActual);
   limpiarProductos();
   numeroDePaginas = Math.ceil(totalDeResultados.length / resultadosPorPagina);
@@ -383,23 +397,3 @@ const club = new calzado("Reebok", "Club", 11000, "Moda", "imagenes/reebok club.
 zapatillas.push(club);
 const legacy = new calzado("Reebok", "Legacy", 15000, "Moda", "imagenes/reebok legacy.webp");
 zapatillas.push(legacy);
-
-
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-zapatillas.push(blazer);
-
-zapatillas.push(royal);
-zapatillas.push(royal);
-zapatillas.push(royal);
-zapatillas.push(royal);
-zapatillas.push(royal);
-zapatillas.push(royal);
-zapatillas.push(royal);
-zapatillas.push(royal);
-zapatillas.push(royal);
