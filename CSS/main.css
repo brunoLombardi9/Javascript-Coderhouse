@@ -7859,6 +7859,9 @@ svg {
 #sideBarMobile {
   background-color: #F5F5F5; }
 
+#sideBarMobile ul li a {
+  color: grey; }
+
 @media only screen and (min-width: 992px) {
   #sideBarMobile {
     display: none; } }

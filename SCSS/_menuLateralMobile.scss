@@ -2,6 +2,10 @@
   background-color: $colorBarras;
 }
 
+#sideBarMobile ul li a{
+  color: grey;
+}
+
 @media only screen and (min-width: 992px) {
    #sideBarMobile{
     display: none;
