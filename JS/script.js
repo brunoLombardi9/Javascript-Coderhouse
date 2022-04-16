@@ -155,8 +155,7 @@ function resultadoBusqueda(botonera, parametroBusqueda) {
 
 function todosLosModelos() {
   limpiarProductos();
-  const catalogoCompleto = datosPaginacion(zapatillas);
-  generarCards(catalogoCompleto);
+  generarCards(datosPaginacion(zapatillas));
   checkearCarrito();
 }
 
@@ -186,7 +185,7 @@ function agregarAlCarrito(id) {
       duration: 1200,
       newWindow: true,
       gravity: "bottom", // `top` or `bottom`
-      position: "right", // `left`, `center` or `right`
+      position: "right", // `left`, `center` o `right`
       stopOnFocus: false, // Prevents dismissing of toast on hover
       style: {
         background: "#062C30",
@@ -244,8 +243,8 @@ function carritoDeCompras() {
       <th scope="col" class ="d-flex justify-content-center"><button id="vaciarCarrito" class="btn btn-danger" onclick="vaciarCarrito()">Vaciar Carrito</button></th>
     </tr>
       <tr>
-        <th scope="col">Producto</th>
-        <th scope="col">Precio</th>
+        <th scope="col" class = "text-center">Producto</th>
+        <th scope="col" class = "text-center">Precio</th>
         <th scope="col" class = "text-center">Total</th>
       </tr>
     </thead>
@@ -266,8 +265,8 @@ function carritoDeCompras() {
       const datosProducto = document.createElement("tr");
 
       datosProducto.innerHTML = `
-        <th scope="row">${productoCarrito.marca} ${productoCarrito.modelo}</th>
-        <td>$${productoCarrito.precioDefinitivo}</td>
+        <th class="text-center" scope="row">${productoCarrito.marca} ${productoCarrito.modelo}</th>
+        <td class="text-center">$${productoCarrito.precioDefinitivo}</td>
         <td class ="d-flex justify-content-center"><button class="btn btn-danger eliminarDelCarrito" onclick="eliminarProducto(${productoCarrito.id})">X</button></td>
                                 `
       elementosCarrito.appendChild(datosProducto)
@@ -347,8 +346,8 @@ function avanzarRetroceder(accion) {
 }
 
 function volverArriba() {
-  const techo = document.documentElement;
-  techo.scrollTo({
+  const index = document.documentElement;
+  index.scrollTo({
     top: 0,
     behavior: "smooth"
   });
