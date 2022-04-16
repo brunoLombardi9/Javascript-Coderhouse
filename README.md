@@ -15,6 +15,7 @@ botonesCategorias: node list que contiene los elementos del menu lateral de la s
 
 
 Variables:
+
 botonCarritoOriginal:  variable donde se guarda el estado original del carrito de compras (se usa en la funcion checkearCarrito para que cuando el carrito este vacio se muestre de color verde y sin cantidad de productos).
 cotizacionDolar: variable en la que se almacena cotizacion del dolar extraida de la API DolarSi.
 resultadosPorPagina:  determina cantidad maxima de cards que se muestran por resultado de busqueda.
@@ -24,6 +25,7 @@ numeroDePaginas: variable que guarda cuantas paginas devuelve el resultado de bu
 
 --------------------------------------------------------------------------------------------------
 Arrays:
+
 zapatillas: array que contiene todos los objetos de los productos.
 arrayPaginacion: array que contiene los objetos que se muestran en la pagina actual.
 totalDeResultados: array que contiene todos los resultados de las busquedas de productos.
